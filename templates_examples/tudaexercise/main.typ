@@ -15,6 +15,7 @@
     tutor: "Dr. John Smith",
     lecturer: "Prof. Dr. Jane Doe",
   ),
+  headline: ("title", "name", "id"),
   title-sub: title-sub.exercise(),
   logo: image("logos/tuda_logo_replace.svg"),
   design: (
@@ -99,7 +100,7 @@ The leftover options are:
 - `language` to control the language of certain keywords (can either be `"de"` or `"en"`)
 - `margins` which is a dictionary controlling the page margins
 - `paper` which currently only supports `"a4"`
-- `headline` which currently is unsupported.
+- `headline` what parts of the headline to show (or none). Use elements `"title"`, `"name"` and `"id"`
 
 
 = Creating tasks
@@ -185,5 +186,3 @@ If you want to create an unnumbered section you can use the `tuda-section` or `t
 + Points -- This would require a state and make declaring tasks far more complex than just using headings. Though technically the points can also be written manually into the task title.
 
 + Solutions -- Enabling whether solutions should be shown or not from within the template would again require a state and is thus rather costly. However you can implement them rather easily as from outside the template a boolean will already do.
-
-+ Headline -- The core problem here comes from how Typst's page margins and context work. There would be a workaround of just placing the title card over the headline of the first page but that is rather hacky. Thus sadly this also can't be implemented manually.

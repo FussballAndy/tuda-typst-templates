@@ -113,6 +113,18 @@
   let design = design-defaults + design
   let info = info.pairs().filter(x => x.at(1) != none).to-dict()
 
+  let headline = if type(headline) == str {
+    (headline,)
+  } else if type(headline) == array {
+    headline
+  } else {
+    ()
+  }
+
+  for x in headline {
+    assert(x in ("title", "name", "id"), message: "Unknown headline key'" + x + "'!")
+  }
+  
   let text_color = if design.darkmode {
     white
   } else {
@@ -250,12 +262,11 @@
     height: 4mm
   )
 
-  let header_frontpage = grid(
-    rows: auto,
-    row-gutter: 1.4mm + 0.25mm,
-    identbar,
-    line(length: 100%, stroke: tud_header_line_height),
-  )
+  let header_frontpage = {
+    set block(above: 1.4mm + 0.25mm, below: 0mm)
+    identbar
+    line(length: 100%, stroke: tud_header_line_height)
+  }
 
   let number_form_box = box(
     curve(
@@ -265,30 +276,50 @@
       curve.line((1em,0em)),
       curve.line((1em,-.5em)),
     )
-  ) + " "
-
-  let student_id_boxes = for i in range(7) {
-    number_form_box
-  }
-
-  let additional_header = grid(
-    rows: auto,
-    row-gutter: 1.4mm + 0.25mm,
-    info.title,
-    {
-      dict.firstname + ", " + dict.lastname + ": "
-      box(width:1fr, line(length: 100%, stroke: 0.5pt))
-      h(2em)
-      dict.student_id + ": "
-      student_id_boxes
-    },
-    [],
-    line(length: 100%, stroke: tud_heading_line_thin_stroke),
   )
 
+  let student_id_boxes = range(7).map(_ => number_form_box).join([ ])
+
+  let show_additional_header = type(headline) == array and headline.len() > 0
+
+  let additional_header = if show_additional_header {
+    set block(above: 2.1mm + 0.25mm, below: 0mm)
+    block({
+      if "title" in headline {
+        info.title
+        linebreak()
+      }
+      if "name" in headline or "id" in headline {
+        set block(spacing: 2mm) // control spacing between title and grid
+        grid(
+          columns: (1fr, auto),
+          column-gutter: 1cm,
+          align: (left, right),
+          inset: (right: 1mm), // else student id boxes overflow
+          if "name" in headline [
+            #dict.lastname, #dict.firstname: #box(width: 1fr, line(length: 100%, stroke: 0.5pt))
+          ],
+          if "id" in headline [
+            #dict.student_id: #student_id_boxes
+          ]
+        )
+      }
+    })
+    line(length: 100%, stroke: tud_heading_line_thin_stroke)
+   } else {
+    []
+  }
+  
+
   context {
-    let height_header = measure(header_frontpage).height
-    let height_additional_header = measure(additional_header).height
+    // without width argument, measure sometimes yields imprecise results
+    let height_header = measure(header_frontpage, width: 21cm).height
+    let height_additional_header = if show_additional_header { 
+      // measure does not account for block spacing around element
+      measure(additional_header, width: 21cm).height + 2.1mm + 0.25mm
+    } else {
+      0mm
+    }
 
     set page(
       paper: paper,
@@ -301,11 +332,11 @@
         right: margins.right
       ),
       header: context {
-        if(show-title) {
-          place(dy: margins.top, header_frontpage)
-          if(here().page() > 1){
-            place(dy:margins.top + height_header + 2*1.4mm, additional_header)
-          }
+        header_frontpage
+        if here().page() > 1 {
+          additional_header
+        } else {
+          hide(additional_header)
         }
       },
       header-ascent: tud_inner_page_margin_top,
@@ -313,9 +344,8 @@
     )
 
     if show-title {
-      v(-height_additional_header)
       tuda-make-title(
-        tud_inner_page_margin_top, 
+        tud_inner_page_margin_top + height_additional_header, 
         tud_header_line_height,
         accent_color,
         text_on_accent_color,
