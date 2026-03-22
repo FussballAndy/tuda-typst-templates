@@ -70,8 +70,8 @@ info: (
 ```
 The options can also be left empty. Then their corresponding item will not appear.
 
-Additionally there is the `title-sub` field which controls how the subline of the title looks like. By default this is set to the exercise version. There also is a submission version which also displays the submission extra info fields. Or if both don't fit your needs, you can also pass raw content to the field and control the subline to your will. \
-For more info see the exported `title-sub` module of this template.
+Additionally there is the `info-layout` field which controls how the subline of the title looks like. By default this is set to the exercise version. There also is a submission version which also displays the submission extra info fields. Or if both don't fit your needs, you can also pass raw content to the field and control the subline to your will. \
+For more info see the exported `info-layout` module of this template.
 
 If you do not want to have a title card you can also set `show-title` to `false`.
 
