@@ -1,7 +1,5 @@
 #import "common/format.typ": format-date, text-roboto
 
-/// To be used as `info-layout`
-/// 
 /// The default version of the title subline.
 /// 
 /// *Possible `info` items:*
@@ -53,8 +51,6 @@
   [#text-roboto(strong(key)): #value]
 }
 
-/// To be used as `title-sub`
-/// 
 /// Allows more customization about how to display information about this document.
 /// 
 /// *Possible `info` items:*
