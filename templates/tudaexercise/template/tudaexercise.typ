@@ -284,31 +284,30 @@
 
   let additional_header = if show_additional_header {
     set block(above: 2.1mm + 0.25mm, below: 0mm)
-    block({
+
+    let grid-content = (
       if "title" in headline {
-        info.title
-        linebreak()
-      }
-      if "name" in headline or "id" in headline {
-        set block(spacing: 2mm) // control spacing between title and grid
-        grid(
-          columns: (1fr, auto),
-          column-gutter: 1cm,
-          align: (left, right),
-          inset: (right: 1mm), // else student id boxes overflow
-          if "name" in headline [
-            #dict.lastname, #dict.firstname: #box(width: 1fr, line(length: 100%, stroke: 0.5pt))
-          ],
-          if "id" in headline [
-            #dict.student_id: #student_id_boxes
-          ]
-        )
-      }
-    })
+        grid.cell(info.title, colspan: 2)
+      },
+      if "name" in headline [
+        #dict.lastname, #dict.firstname: #box(width: 1fr, line(length: 100%, stroke: 0.5pt))
+      ] else [],
+      if "id" in headline [
+        #dict.student_id: #student_id_boxes
+      ]
+    ).filter(x => x != none)
+
+    grid(
+      columns: (1fr, auto),
+      column-gutter: 1cm,
+      row-gutter: 2mm,
+      align: (left, right),
+      inset: (right: 1mm), // else student id boxes overflow
+      ..grid-content,
+    )
+    
     line(length: 100%, stroke: tud_heading_line_thin_stroke)
-   } else {
-    []
-  }
+  } else {}
   
 
   context {
