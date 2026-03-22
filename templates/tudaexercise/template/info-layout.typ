@@ -1,5 +1,22 @@
 #import "common/format.typ": format-date, text-roboto
 
+#let resolve-term(term, dict) = if term == auto {
+  // if month between 4 and 9 then it's summer term, else it's winter term
+  let month = datetime.today().month()
+  let year = datetime.today().year()
+  if month >= 4 and month <= 9 {
+    dict.summer_term + " " + str(year)
+  } else {
+    dict.winter_term
+    if month < 4 {
+      year = year - 1
+    }
+    " " + str(year) + "/" + str(year + 1)
+  }
+} else {
+  term
+}
+
 /// The default version of the title subline.
 /// 
 /// *Possible `info` items:*
@@ -11,22 +28,7 @@
 /// -> function
 #let exercise(additional: none) = (info, dict) => {
   if "term" in info {
-    if info.term == auto {
-      // if month between 4 and 9 then it's summer term, else it's winter term
-      let month = datetime.today().month()
-      let year = datetime.today().year()
-      if month >= 4 and month <= 9 {
-        dict.summer_term + " " + str(year)
-      } else {
-        dict.winter_term
-        if month < 4 {
-          year = year - 1
-        }
-        " " + str(year) + "/" + str(year + 1)
-      }
-    } else {
-      info.term
-    }
+    resolve-term(info.term, dict)
     linebreak()
   }
   if "date" in info {
@@ -116,8 +118,12 @@
   } else if i in info {
     assert(i in dict,
       message: "Unknown item '" + i + "' in submission, please use manual syntax: (\"Display Name\", \"Value\")")
+    let value = info.at(i)
+    if i == "term" {
+      value = resolve-term(value, dict)
+    }
     // Format date ignores formatting if type isn't date thus this works
-    return item-style(dict.at(i), format-date(info.at(i), dict.locale))
+    return item-style(dict.at(i), format-date(value, dict.locale))
   } else {
     return none
   }
