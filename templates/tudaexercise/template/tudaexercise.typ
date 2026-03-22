@@ -291,7 +291,9 @@
       },
       if "name" in headline [
         #dict.lastname, #dict.firstname: #box(width: 1fr, line(length: 100%, stroke: 0.5pt))
-      ] else [],
+      ] else if "id" in headline [
+        // empty cell to have id on the right
+      ],
       if "id" in headline [
         #dict.student_id: #student_id_boxes
       ]
