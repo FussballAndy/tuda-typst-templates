@@ -1,5 +1,5 @@
 #import "@local/athena-tu-darmstadt-exercise:0.2.0": (
-  subtask, task, text-roboto, title-sub, tuda-gray-info, tuda-section, tuda-subsection, tudaexercise, task-points-header, point-format, difficulty-format, tuda-difficulty-stars,
+  subtask, task, text-roboto, info-layout, tuda-gray-info, tuda-section, tuda-subsection, tudaexercise, task-points-header, point-format, difficulty-format, tuda-difficulty-stars,
 )
 
 #show: tudaexercise.with(
@@ -15,7 +15,7 @@
     tutor: "Dr. John Smith",
     lecturer: "Prof. Dr. Jane Doe",
   ),
-  title-sub: title-sub.exercise(),
+  info-layout: info-layout.exercise(),
   logo: image("logos/tuda_logo_replace.svg"),
   design: (
     accentcolor: "0b",

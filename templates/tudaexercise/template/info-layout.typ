@@ -1,12 +1,6 @@
-/// Provides functions to style the subline in the title card of the template.
-/// Currently the following two functions exist:
-/// - exercise: Behaves pretty much like in the LaTeX template
-/// - submission: Behaves out of the box more like Rubos LaTeX template but also has
-///   customization options and allows more info-fields.
-
 #import "common/format.typ": format-date, text-roboto
 
-/// To be used as `title-sub`
+/// To be used as `info-layout`
 /// 
 /// The default version of the title subline.
 /// 
