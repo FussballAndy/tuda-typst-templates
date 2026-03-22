@@ -6,6 +6,7 @@
   language: "en",
   info: (
     title: "Usage of TUDaExercise",
+    header_title: "TUDaExercise",
     subtitle: "A small guide.",
     author: (("Andreas", "129219"), "Dennis"),
     term: auto,
@@ -54,6 +55,7 @@ All options of the title can be controlled using the `info` dictionary:
 ```
 info: (
   title: "The big title",
+  header_title: "The title in the page header",
   subtitle: "The smaller title below",
   author: "The author",
   // author: ("Author 1", "Author 2"), // can also be an array of authors

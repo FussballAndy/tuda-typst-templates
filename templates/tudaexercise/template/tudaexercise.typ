@@ -286,8 +286,8 @@
     set block(above: 2.1mm + 0.25mm, below: 0mm)
 
     let grid-content = (
-      if "title" in headline {
-        grid.cell(info.title, colspan: 2)
+      if "title" in headline and "header_title" in info {
+        grid.cell(info.header_title, colspan: 2)
       },
       if "name" in headline [
         #dict.lastname, #dict.firstname: #box(width: 1fr, line(length: 100%, stroke: 0.5pt))
