@@ -102,7 +102,10 @@ The leftover options are:
 - `language` to control the language of certain keywords (can either be `"de"` or `"en"`)
 - `margins` which is a dictionary controlling the page margins
 - `paper` which currently only supports `"a4"`
-- `headline` what parts of the headline to show (or none). Use elements `"title"`, `"name"` and `"id"`
+- `headline` control the headline. The following values are supported:
+  - An array (or single string) with keys `"title"`, `"name"` and `"id"` for the default headline style. Further, `"fl"` can be provided to control the order of first and last name in the header. 
+  - Raw `content` that will be displayed
+  - `none` or `()` for no headline
 
 
 = Creating tasks
