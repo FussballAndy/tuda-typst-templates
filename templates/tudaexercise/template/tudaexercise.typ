@@ -29,7 +29,14 @@
 /// - margins (dictionary): The page margins, possible entries: `top`, `left`,
 ///   `bottom`, `right`
 /// 
-/// - headline (array): Currently not supported. Should be used to configure the headline.
+/// - headline (array, str, content, none): Control the headline of pages.
+///   If array or string, the following keys are supported: `"title"`, `"name"`,
+///   `"id"` and `"fl"`. The first three create the correspondig part known from the
+///   LaTeX template. If `"fl"` is present, the ordering for the names is switched to
+///   `First, Last`.
+/// 
+///   If content is passed, it is displayed directly. If none is passed or at most `"fl"`
+///   is given as key, the headline is omitted.
 /// 
 /// - paper (str): The type of paper to be used. Currently only a4 is supported.
 /// 
@@ -292,7 +299,7 @@
       ),
       header: context {
         header_frontpage
-        if here().page() > 1 {
+        if here().page() > 1 or not show-title {
           additional_header
         } else {
           hide(additional_header)
