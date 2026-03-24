@@ -8,6 +8,7 @@
 #import "title.typ": *
 #import "locales.typ": *
 #import "title-sub.typ" as title-sub
+#import "headline.typ": resolve-headline
 
 #let design-defaults = (
   accentcolor: "0b",
@@ -112,18 +113,6 @@
   let margins = tud_exercise_page_margin + margins
   let design = design-defaults + design
   let info = info.pairs().filter(x => x.at(1) != none).to-dict()
-
-  let headline = if type(headline) == str {
-    (headline,)
-  } else if type(headline) == array {
-    headline
-  } else {
-    ()
-  }
-
-  for x in headline {
-    assert(x in ("title", "name", "id"), message: "Unknown headline key'" + x + "'!")
-  }
   
   let text_color = if design.darkmode {
     white
@@ -268,45 +257,14 @@
     line(length: 100%, stroke: tud_header_line_height)
   }
 
-  let number_form_box = box(
-    curve(
-      stroke: .5pt,
-      curve.move((0em, -.5em)),
-      curve.line((0em,0em)),
-      curve.line((1em,0em)),
-      curve.line((1em,-.5em)),
-    )
-  )
+  let headline = resolve-headline(headline, info, dict)
 
-  let student_id_boxes = range(7).map(_ => number_form_box).join([ ])
-
-  let show_additional_header = type(headline) == array and headline.len() > 0
+  let show_additional_header = headline != none
 
   let additional_header = if show_additional_header {
     set block(above: 2.1mm + 0.25mm, below: 0mm)
 
-    let grid-content = (
-      if "title" in headline and "header_title" in info {
-        grid.cell(info.header_title, colspan: 2)
-      },
-      if "name" in headline [
-        #dict.lastname, #dict.firstname: #box(width: 1fr, line(length: 100%, stroke: 0.5pt))
-      ] else if "id" in headline [
-        // empty cell to have id on the right
-      ],
-      if "id" in headline [
-        #dict.student_id: #student_id_boxes
-      ]
-    ).filter(x => x != none)
-
-    grid(
-      columns: (1fr, auto),
-      column-gutter: 1cm,
-      row-gutter: 2mm,
-      align: (left, right),
-      inset: (right: 1mm), // else student id boxes overflow
-      ..grid-content,
-    )
+    block(headline, width: 100%)
     
     line(length: 100%, stroke: tud_heading_line_thin_stroke)
   } else {}
