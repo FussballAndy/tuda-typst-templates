@@ -1,4 +1,4 @@
-#import "@local/athena-tu-darmstadt-exercise:0.2.0": (
+#import "@preview/athena-tu-darmstadt-exercise:0.2.0": (
   subtask, task, text-roboto, info-layout, tuda-gray-info, tuda-section, tuda-subsection, tudaexercise, task-points-header, point-format, difficulty-format, tuda-difficulty-stars,
 )
 
@@ -6,6 +6,7 @@
   language: "en",
   info: (
     title: "Usage of TUDaExercise",
+    header_title: "TUDaExercise",
     subtitle: "A small guide.",
     author: (("Andreas", "129219"), "Dennis"),
     term: auto,
@@ -16,6 +17,7 @@
     lecturer: "Prof. Dr. Jane Doe",
   ),
   info-layout: info-layout.exercise(),
+  headline: ("title", "name", "id"),
   logo: image("logos/tuda_logo_replace.svg"),
   design: (
     accentcolor: "0b",
@@ -53,6 +55,7 @@ All options of the title can be controlled using the `info` dictionary:
 ```
 info: (
   title: "The big title",
+  header_title: "The title in the page header",
   subtitle: "The smaller title below",
   author: "The author",
   // author: ("Author 1", "Author 2"), // can also be an array of authors
@@ -99,7 +102,10 @@ The leftover options are:
 - `language` to control the language of certain keywords (can either be `"de"` or `"en"`)
 - `margins` which is a dictionary controlling the page margins
 - `paper` which currently only supports `"a4"`
-- `headline` which currently is unsupported.
+- `headline` control the headline. The following values are supported:
+  - An array (or single string) with keys `"title"`, `"name"` and `"id"` for the default headline style. Further, `"fl"` can be provided to control the order of first and last name in the header. 
+  - Raw `content` that will be displayed
+  - `none` or `()` for no headline
 
 
 = Creating tasks
@@ -185,5 +191,3 @@ If you want to create an unnumbered section you can use the `tuda-section` or `t
 + Points -- This would require a state and make declaring tasks far more complex than just using headings. Though technically the points can also be written manually into the task title.
 
 + Solutions -- Enabling whether solutions should be shown or not from within the template would again require a state and is thus rather costly. However you can implement them rather easily as from outside the template a boolean will already do.
-
-+ Headline -- The core problem here comes from how Typst's page margins and context work. There would be a workaround of just placing the title card over the headline of the first page but that is rather hacky. Thus sadly this also can't be implemented manually.

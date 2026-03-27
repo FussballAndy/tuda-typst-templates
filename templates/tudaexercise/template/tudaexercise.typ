@@ -1,5 +1,5 @@
 #import "common/tudacolors.typ": tuda_colors, text_colors
-#import "common/props.typ": tud_exercise_page_margin, tud_header_line_height, tud_inner_page_margin_top, tud_title_logo_height
+#import "common/props.typ": tud_exercise_page_margin, tud_header_line_height, tud_inner_page_margin_top, tud_title_logo_height, tud_heading_line_thin_stroke
 #import "common/headings.typ": tuda-section, tuda-subsection, tuda-subsection-unruled
 #import "common/util.typ": check-font-exists
 #import "common/addons/difficulty-points.typ": difficulty-stars
@@ -8,6 +8,7 @@
 #import "title.typ": *
 #import "locales.typ": *
 #import "info-layout.lib.typ" as info-layout
+#import "headline.typ": resolve-headline
 
 #let design-defaults = (
   accentcolor: "0b",
@@ -28,7 +29,14 @@
 /// - margins (dictionary): The page margins, possible entries: `top`, `left`,
 ///   `bottom`, `right`
 /// 
-/// - headline (array): Currently not supported. Should be used to configure the headline.
+/// - headline (array, str, content, none): Control the headline of pages.
+///   If array or string, the following keys are supported: `"title"`, `"name"`,
+///   `"id"` and `"fl"`. The first three create the correspondig part known from the
+///   LaTeX template. If `"fl"` is present, the ordering for the names is switched to
+///   `First, Last`.
+/// 
+///   If content is passed, it is displayed directly. If none is passed or at most `"fl"`
+///   is given as key, the headline is omitted.
 /// 
 /// - paper (str): The type of paper to be used. Currently only a4 is supported.
 /// 
@@ -112,7 +120,7 @@
   let margins = tud_exercise_page_margin + margins
   let design = design-defaults + design
   let info = info.pairs().filter(x => x.at(1) != none).to-dict()
-
+  
   let text_color = if design.darkmode {
     white
   } else {
@@ -250,34 +258,60 @@
     height: 4mm
   )
 
-  let header_frontpage = grid(
-    rows: auto,
-    row-gutter: 1.4mm + 0.25mm,
-    identbar,
-    line(length: 100%, stroke: tud_header_line_height),
-  )
+  let header_frontpage = {
+    set block(above: 1.4mm + 0.25mm, below: 0mm)
+    identbar
+    line(length: 100%, stroke: tud_header_line_height)
+  }
+
+  let headline = resolve-headline(headline, info, dict)
+
+  let show_additional_header = headline != none
+
+  let additional_header = if show_additional_header {
+    set block(above: 2.1mm + 0.25mm, below: 0mm)
+
+    block(headline, width: 100%)
+    
+    line(length: 100%, stroke: tud_heading_line_thin_stroke)
+  } else {}
+  
 
   context {
-    let height_header = measure(header_frontpage).height
+    // without width argument, measure sometimes yields imprecise results
+    let height_header = measure(header_frontpage, width: 21cm).height
+    let height_additional_header = if show_additional_header { 
+      // measure does not account for block spacing around element
+      measure(additional_header, width: 21cm).height + 2.1mm + 0.25mm
+    } else {
+      0mm
+    }
 
     set page(
       paper: paper,
       numbering: "1",
       number-align: right,
       margin: (
-        top: margins.top + tud_inner_page_margin_top + height_header, 
+        top: margins.top + tud_inner_page_margin_top + height_header + height_additional_header, 
         bottom: margins.bottom, 
         left: margins.left, 
         right: margins.right
       ),
-      header: header_frontpage,
+      header: context {
+        header_frontpage
+        if here().page() > 1 or not show-title {
+          additional_header
+        } else {
+          hide(additional_header)
+        }
+      },
       header-ascent: tud_inner_page_margin_top,
       fill: background_color
     )
 
     if show-title {
       tuda-make-title(
-        tud_inner_page_margin_top, 
+        tud_inner_page_margin_top + height_additional_header, 
         tud_header_line_height,
         accent_color,
         text_on_accent_color,
