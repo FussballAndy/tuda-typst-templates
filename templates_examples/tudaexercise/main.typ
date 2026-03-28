@@ -60,9 +60,12 @@ info: (
   author: "The author",
   // author: ("Author 1", "Author 2"), // can also be an array of authors
   // author: (("Author 1", "123456"), "Author 2"), // or the matriculation number can be provided
+
   term: "The current term aka. semester",
+  // term: auto, // can also be inferred automatically
   date: "The current date",
   // date: datetime.today(), // can also be a datetime object
+  // _date: datetime.today(), // can start with an underscore to control the date for automatic term generation but not show date in the info
   sheet: 0, // The current sheetnumber
 
   // submission extras:
@@ -73,7 +76,7 @@ info: (
 ```
 The options can also be left empty. Then their corresponding item will not appear.
 
-Additionally there is the `info-layout` field which controls how the subline of the title looks like. By default this is set to the exercise version. There also is a submission version which also displays the submission extra info fields. Or if both don't fit your needs, you can also pass raw content to the field and control the subline to your will. \
+Additionally there is the `info-layout` field which controls the subline of the title's look. By default this is set to the exercise version. There also is a submission version which displays the submission's additional information fields. Or, if both don't fit your needs, you can also pass raw content to the field and control the subline to your will. \
 For more info see the exported `info-layout` module of this template.
 
 If you do not want to have a title card you can also set `show-title` to `false`.

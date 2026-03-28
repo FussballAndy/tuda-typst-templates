@@ -7,7 +7,7 @@
 #import "common/format.typ": text-roboto
 #import "title.typ": *
 #import "locales.typ": *
-#import "info-layout.lib.typ" as info-layout
+#import "info-layout.typ" as info-layout
 #import "headline.typ": resolve-headline
 
 #let design-defaults = (
